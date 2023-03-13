@@ -35,14 +35,10 @@ const Calculator = () => {
     const numClickHandler = (e) => {
         e.preventDefault();
         const value = e.target.innerHTML;
-        
         if (removeSpaces(state.operand1).length < 15) {
             setState({
                 ...state,
-                operand1:
-                    removeSpaces(state.operand1) % 1 === 0 && !state.operand1.toString().includes(".")
-                        ? Number(removeSpaces(state.operand1 + value))
-                        : state.operand1 + value,
+                operand1: state.operand1 === 0 && value === "0" ? "0" : Number(removeSpaces(state.operand1 + value)),
                 operand2: !state.operator ? 0 : state.operand2,
             });
         }
@@ -53,10 +49,7 @@ const Calculator = () => {
         if (removeSpaces(state.operand1).length < 15 || removeSpaces(state.operand1).length > 0) {
             setState({
                 ...state,
-                operand1:
-                    removeSpaces(state.operand1) % 1 === 0 && !state.operand1.toString().includes(".")
-                        ? Number(removeSpaces(state.operand1.toString().slice(0, state.operand1.toString().length - 1)))
-                        : state.operand1.slice(0, state.operand1.toString().length - 1),
+                operand1: Number(removeSpaces(state.operand1.toString().slice(0, state.operand1.toString().length - 1))),
                 operand2: !state.operator ? 0 : state.operand2,
             });
         }
@@ -68,7 +61,7 @@ const Calculator = () => {
                 ...state,
                 operand2:
                     state.operand1 === "0" && state.operator === "/"
-                        ? "Can't divide with 0" : math(
+                        ? "Math ERROR" : math(
                             Number(removeSpaces(state.operand2)),
                             Number(removeSpaces(state.operand1)),
                             state.operator
@@ -81,7 +74,6 @@ const Calculator = () => {
 
     const resetClickHandler = () => {
         setState({
-            ...state,
             operator: "",
             operand1: 0,
             operand2: 0,
@@ -93,7 +85,6 @@ const Calculator = () => {
         const value = e.target.innerHTML;
 
         setState({
-            ...state,
             operand1: !state.operand1.toString().includes(".") ? state.operand1 + value : state.operand1,
         });
     };
@@ -140,7 +131,7 @@ const Calculator = () => {
             </div>
             <div className='button-cal'>
                 {buttons.map((btn, index) => (
-                    <button className={(btn === 'AC' || btn === '=') ? 'two-span' : ''} type='button' key={index}
+                    <button className={(btn === 'AC' || btn === '=') ? 'two-span' : 'one-span'} type='button' key={index}
                         onClick={
                             isOperator(btn) ? operatorClickHandler :
                                 btn === 'AC' ? resetClickHandler :
